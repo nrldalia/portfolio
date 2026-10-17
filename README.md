@@ -1,10 +1,133 @@
-# DataFlow Hub — Improved original v1.0
+# DataFlow Hub
 
-Enhances the original React/Vite/Tailwind frontend and Flask/Pandas/SQLite backend. The original navy/slate/blue colours, sidebar, four pages and split-pane Clients screen are preserved. This package does not use Streamlit.
+### Turning messy operational data into clear, traceable workflows.
 
-## Linux / cloud quick start
+DataFlow Hub is a data processing and quality review application designed to help users prepare operational datasets with greater consistency and visibility.
 
-From the repository root, use Python 3.12 and Node.js 20.19+ (or 22.12+):
+Built with **Python, Flask, Pandas, SQLite, and React**, it brings file uploads, configurable cleaning rules, quality checks, and processing history into one interface.
+
+## 🌍 Vision
+
+To make reliable data preparation accessible, understandable, and traceable; so people can spend more time using their data and less time correcting it.
+
+## 🎯 Mission
+
+To simplify repetitive data preparation through explicit processing rules, visible quality checks, and preserved evidence of each run.
+
+DataFlow Hub aims to give users control over how their data is processed and a clear understanding of what changed, what remains unresolved, and what needs further review.
+
+## 💡 Purpose
+
+Operational datasets often arrive with inconsistent formatting, missing fields, duplicate records, and invalid values. Handling these issues manually can be repetitive and makes it difficult to explain how a final dataset was produced.
+
+DataFlow Hub provides a structured workflow to:
+
+- Consolidate common preparation tasks in one application.
+- Apply consistent rules across an uploaded dataset.
+- Identify quality issues without silently discarding records.
+- Compare original data with processed results.
+- Preserve processing history and supporting evidence.
+- Produce downloadable datasets for further analysis.
+
+## 🔍 What DataFlow Hub Does
+
+### Configurable Data Preparation
+
+Upload **CSV, JSON, or Excel (`.xlsx`)** files and choose the rules to apply before processing.
+
+Available rules include:
+
+- Trimming leading and trailing whitespace.
+- Converting specified fields to numeric values.
+- Standardising dates using an explicit input format.
+- Checking required fields for missing values.
+- Flagging duplicate records.
+
+Excel imports use the first worksheet.
+
+### Visible Quality Checks
+
+Review original and processed previews alongside reported issues and transformation details.
+
+Invalid numeric and date values are flagged for review rather than replaced with invented values. Duplicate records are retained and identified, allowing users to decide how to handle them.
+
+### Processing History
+
+Reopen saved processing runs to review their results, rules, issues, and transformation records.
+
+SQLite stores processing information locally so users can return to previous work after restarting the application.
+
+### Full-Dataset Exports and Audit Evidence
+
+Download processed data in CSV, JSON, or Excel format.
+
+Each saved run also supports an audit ZIP containing:
+
+- The original uploaded file.
+- The processed output.
+- The applied rules.
+- Recorded transformations.
+- Reported quality issues.
+- Run metadata and a source-file hash.
+
+### Optional AI Assistance
+
+With explicit consent, users can share a limited sample with an optional Gemini integration to receive explanations and suggested rules.
+
+AI supports interpretation; it does not automatically modify records. Core processing works independently of AI availability.
+
+## 🔄 Workflow
+
+**Upload → Configure Rules → Process → Review → Export**
+
+1. **Upload** a supported dataset.
+2. **Configure** the fields and preparation rules.
+3. **Process** the full dataset.
+4. **Review** previews, changes, and unresolved issues.
+5. **Export** the processed data and supporting evidence.
+
+## 📊 Intended Outcomes
+
+DataFlow Hub is designed to support:
+
+| Outcome | How the application supports it |
+| :--- | :--- |
+| More consistent data preparation | Applies configured rules across every record in a run. |
+| Less repetitive manual work | Combines common cleaning and validation steps into one workflow. |
+| Clearer quality review | Makes missing values, invalid values, and duplicates visible. |
+| Greater traceability | Preserves source files, rules, transformations, and outputs. |
+| Easier handover | Provides downloadable results and evidence for further review. |
+
+These are intended benefits of the workflow, rather than measured claims of time savings or business impact. Processed data may still contain flagged issues requiring human judgment.
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+| :--- | :--- |
+| Frontend | React, Vite, Tailwind CSS |
+| Backend | Python, Flask |
+| Data processing | Pandas |
+| Storage | SQLite |
+| Optional AI assistance | Gemini API |
+
+## 🚀 Getting Started
+
+### Requirements
+
+- Python 3.11 or 3.12
+- Node.js 20.19+ or 22.12+
+- Internet access for the initial dependency installation
+
+Run the following steps from the **DataFlow Hub project folder**.
+
+### Windows
+
+1. Run `Setup_Windows.bat` to install dependencies and build the frontend.
+2. Run `Start_DataFlow.bat`.
+3. Open **http://localhost:5000** in your browser.
+4. Keep the terminal open while using the application.
+
+### Linux / macOS
 
 ```sh
 python3 -m venv .venv
@@ -14,91 +137,33 @@ npm run build
 .venv/bin/python script/app.py
 ```
 
-Flask serves the built app on port 5000. For frontend development, keep Flask running and start `npm run dev` in a second terminal; Vite proxies API requests to Flask. Run backend tests with `cd script && ../.venv/bin/python -m unittest test_app -v` after building.
+Open **http://localhost:5000**.
 
-SQLite is initialized automatically and is excluded from Git. Optional Gemini credentials must be supplied through environment variables, never committed.
+### Try the Sample Dataset
 
-## Windows quick start
+Upload [`sample_data/retail.csv`](./sample_data/retail.csv) and configure:
 
-Prerequisites: Python 3.11/3.12 with Add Python to PATH, plus Node.js 20.19+ or 22.12+. First-time installation requires internet access.
+| Setting | Value |
+| :--- | :--- |
+| Numeric fields | `sales, quantity` |
+| Required fields | `store_id, sales` |
+| Date field | `date` |
+| Input date format | `%d/%m/%Y` |
+| Trim whitespace | Enabled |
 
-1. Extract this ZIP into a writable folder.
-2. Double-click **Setup_Windows.bat** and let dependency installation/build finish.
-3. Double-click **Start_DataFlow.bat**.
-4. Open **http://localhost:5000** in your browser after the terminal says the server is running.
-5. Keep the terminal open. Ctrl+C stops the app.
+Run processing, inspect the reported changes and issues, then download the output and audit evidence.
 
-The Flask server serves the built React app, so normal use needs only one server. Source development retains the original two-process approach:
+## 📌 Scope and Limitations
 
-Backend terminal:
-```bat
-py -m venv .venv
-.venv\Scripts\activate
-python -m pip install -r script\requirements.txt
-python script\app.py
-```
-Frontend terminal:
-```bat
-npm ci
-npm run dev
-```
-Open http://localhost:5173 for development. Vite proxies `/api` to Flask on port 5000. After editing React, run `npm run build` again before using the single-server launcher. On macOS/Linux activate with `source .venv/bin/activate`.
+DataFlow Hub is a **local portfolio application** demonstrating data preparation, quality review, and workflow design.
 
-## Try a full processing run
+- It does not include authentication or multi-user access controls.
+- Processing runs in memory, with a 50 MB upload limit.
+- Numeric conversion expects plain numeric values; currency symbols are not automatically removed.
+- Duplicate checks compare complete processed records.
+- Uploaded files are not automatically mapped to individual client stores.
+- Audit records provide traceability but are not tamper-proof.
+- Optional AI assistance requires your own API credentials and connectivity.
 
-- Upload `sample_data/retail.csv` using the existing sidebar button.
-- The modal opens before processing. Enter numeric fields `sales, quantity`, required fields `store_id, sales`, date field `date`, and date format `%d/%m/%Y`.
-- Keep Trim enabled, then click **Run Full-Dataset Cleaning**.
-- Compare true raw/processed previews. Inspect retained invalid/missing values and flagged duplicates.
-- Export contains all eight rows, although previews show five.
-- Download audit evidence; reopen the run from Data Streams or Quality Analytics.
-- Edit a store and refresh the page to verify the edit persists.
-
-## Improvements
-
-| Original behaviour | Improved behaviour |
-|---|---|
-| Gemini cleans five rows only | Deterministic rules process every row; previews are separate |
-| Export downloads cleaned sample | Export reads the full saved output by run ID |
-| Raw preview can show cleaned values | API returns actual original preview |
-| Upload triggers immediate AI processing | Configure rules first, then explicitly run |
-| Run button has no handler | Connected to full-dataset processing |
-| Edits disappear on refresh | Flask PUT endpoint persists store changes |
-| Offline backend silently displays fake stores | Connection error is visible |
-| Fixed 98.5% clean-record metric | Calculated store-status percentage and measured run metrics |
-| Static AI insight cards | Actual run count and configured AI status |
-| Audit schema exists without saved traces | Source bytes, all raw records, rules, traces, issues and output persist |
-| No run history | Reopen prior runs and download audit ZIPs |
-| CSV/JSON only | CSV, JSON and first-sheet Excel import/export |
-| Copied email differs from displayed draft | Copies the complete displayed draft |
-
-## Optional AI assistance
-
-Set environment variables in the terminal before starting Flask:
-
-```bat
-set GEMINI_API_KEY=your_key_here
-set GEMINI_MODEL=gemini-2.5-flash
-.venv\Scripts\python.exe script\app.py
-```
-
-Use a model available to your account. The backend holds the key; it is not embedded in React. In a result modal, opt in to sharing five original rows and up to twenty issues, then request suggestions. AI explains issues/recommends rules; it never automatically changes records. Edit rules and rerun if you want to act on its advice. Automation works without AI or when a provider call fails. Live Gemini calls require your own key, quota and internet; no live AI call was verified during this build.
-
-## Validation
-
-```bat
-cd script
-python -m unittest test_app -v
-```
-
-Frontend: `npm run build` in the repository root. Backend tests cover full output beyond five rows, raw preview, run-specific traces, audit source preservation, persistent store edits, invalid uploads, date/numeric issues, retained duplicates, CSV/Excel exports, AI consent/fallback and measured history metrics.
-
-## Persistence and scope
-
-SQLite is created at `script/dataflow.db`; copy it with the app stopped to back up all stores and run evidence. The original database schema is retained and extended with processing_runs and run_evidence. Existing databases initialize the new tables without deleting original tables. Store IDs remain globally unique in this edition. FILE_UPLOAD is a technical payload owner hidden from the client-store list. New uploads are not auto-associated with individual stores, so client-store missing-field counts and statuses are independent of file-run checks.
-
-Local portfolio app, not a production multi-user system. No authentication, access roles, unattended scheduler, client-specific mappings, saved rule templates, column mapping, exclusions, freight or finance additions in this first improvement pass. Invalid numeric/date values are retained and flagged, not coerced into invented data. Duplicate checks compare complete processed records. Excel uses the first worksheet. Original CSV/XLSX columns are read as text to preserve leading zeros. JSON object/list input supports arbitrary fields. Numeric fields must contain plain numeric values; currency stripping is not automatic.
-
-Input validation errors are shown without creating a saved run. Successfully processed runs are preserved. Audit downloads contain original bytes, source hash, rules, full output, changes and issues. Database administrators can alter SQLite; this is not a tamper-proof log. The API returns all change/issue entries and processes in memory; the 50 MB upload cap is not a scalability guarantee. The sample data and store seed are demonstrations. Client emails are drafts only and are never sent automatically.
-
-This is a separate improved copy. The user's GitHub repository, original release and previous Streamlit ZIP were not overwritten. See CHANGELOG.md for the implementation record.
+The local database is created at `script/dataflow.db`. Stop the application before copying this file for backup. Keep credentials in environment variables and exclude private operational data from the repository.
+ 
